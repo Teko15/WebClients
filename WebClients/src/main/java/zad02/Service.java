@@ -10,6 +10,8 @@ public class Service {
     Map<String, Double> CURRENCY_CODE_AND_VALUE = new HashMap<>();
     String COUNTRY;
     String CITY;
+    String ourURL;
+    final String apiKey = "f563de78aff8c5006420781b71b27998";
 
     public String getCOUNTRY() {
         return COUNTRY;
@@ -63,13 +65,43 @@ public class Service {
                 CURRENCY_CODE_AND_VALUE.put(currencyCode[i], currencyValue[i]);
             }
         } catch (java.io.IOException ignored) {
-            System.out.println("Something went wrong");
+            System.out.println("Something went wrong with NBP");
         }
     }
 
     public String getWeather(String city) {
-        tempForGUI();
-        return null;
+        //{"coord":{"lon":7.4474,"lat":46.9481},"weather":[{"id":800,"main":"Clear","description":"clear sky","icon":"01n"}],
+        // "base":"stations","main":{"temp":278.45,"feels_like":278.45,"temp_min":276.01,"temp_max":280.58,"pressure":1027,
+        // "humidity":69},"visibility":10000,"wind":{"speed":1.16,"deg":148,"gust":1.45},"clouds":{"all":0},"dt":1648344989,
+        // "sys":{"type":2,"id":19940,"country":"CH","sunrise":1648358378,"sunset":1648403485},"timezone":7200,"id":2661552,
+        // "name":"Bern","cod":200}
+
+        //{"coord":{"lon":8.8078,"lat":53.0752},"weather":[{"id":804,"main":"Clouds","description":"overcast clouds","icon":"04n"}],
+        // "base":"stations","main":{"temp":278.22,"feels_like":276.54,"temp_min":278.03,"temp_max":278.77,"pressure":1032,
+        // "humidity":93},"visibility":10000,"wind":{"speed":2.06,"deg":300},"clouds":{"all":100},"dt":1648344944,
+        // "sys":{"type":1,"id":1281,"country":"DE","sunrise":1648357851,"sunset":1648403359},"timezone":7200,"id":2944388,
+        // "name":"Bremen","cod":200}
+
+        //{"coord":{"lon":79.9083,"lat":6.9028},"weather":[{"id":800,"main":"Clear","description":"clear sky","icon":"01d"}],
+        // "base":"stations","main":{"temp":298.2,"feels_like":298.98,"temp_min":298.2,"temp_max":298.2,"pressure":1013,
+        // "humidity":85,"sea_level":1013,"grnd_level":1012},"visibility":10000,"wind":{"speed":1.82,"deg":114,"gust":2.07},"clouds":{"all":2},"dt":1648345520,
+        // "sys":{"type":1,"id":9098,"country":"LK","sunrise":1648341672,"sunset":1648385418},"timezone":19800,"id":1238992,
+        // "name":"Sri Jayewardenepura Kotte","cod":200}
+
+        ourURL = "https://en.wikipedia.org/wiki/" + CITY;
+        String output = "";
+        try {
+            URL url = new URL("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey);
+            try (java.io.BufferedReader in = new java.io.BufferedReader(new java.io.InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
+                String line;
+                while ((line = in.readLine()) != null) {
+                    output = line;
+                }
+            }
+        } catch (java.io.IOException ignored) {
+            System.out.println("Something went wrong with api");
+        }
+        return output;
     }
 
     public Double getRateFor(String currencyCode) {
@@ -78,11 +110,6 @@ public class Service {
 
     public Double getNBPRate() {
         return (1d / convertCountryCurrencyToPLN());
-    }
-
-    public void tempForGUI() {
-        String wikiURL = "https://en.wikipedia.org/wiki/" + CITY;
-        System.out.println(wikiURL);
     }
 
     private double convertCountryCurrencyToPLN() {
