@@ -5,32 +5,44 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.URL;
+
 public class HelloApplication extends Application {
 
-    final int HEIGHT = 800;
-    final int WIDTH = 600;
+    final static int HEIGHT = 800;
+    final static int WIDTH = 600;
     Group ROOT = new Group();
     Scene SCENE = new Scene(ROOT, HEIGHT, WIDTH);
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
+        URL wikiUrl = new URL("https://en.wikipedia.org/wiki/" + CITY);
+
         Stage stage = new Stage();
-        stage.setTitle("HelloApplication");
+        stage.setTitle("Weather and Currency Service");
         stage.setScene(SCENE);
         stage.show();
         stage.setResizable(false);
     }
 
+    static String CITY;
+    static String WEATHER_JSON;
+    static Double GET_RATE_FOR;
+    static Double GET_NBP_RATE;
+
+
     public static void main(String[] args) {
         Service s = new Service("Germany");
-        String weatherJson = s.getWeather("Sri Jayewardenepura Kotte");
+        String weatherJson = s.getWeather("Bandar Seri Begawan");
         Double rate1 = s.getRateFor("USD");
         Double rate2 = s.getNBPRate();
         // ...
         // część uruchamiająca GUI
-        System.out.println(weatherJson);
-        System.out.println(rate1);
-        System.out.println(rate2);
+        WEATHER_JSON = weatherJson;
+        GET_RATE_FOR = rate1;
+        GET_NBP_RATE = rate2;
+        CITY = s.getCOUNTRY();
         //launch();
     }
 }
