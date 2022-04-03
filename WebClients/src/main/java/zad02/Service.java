@@ -1,5 +1,10 @@
 package zad02;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.annotations.JsonAdapter;
+
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -9,6 +14,8 @@ public class Service {
     Map<String, String> CURRENCY_NAME_AND_CODE = new HashMap<>();
     Map<String, Double> CURRENCY_CODE_AND_VALUE = new HashMap<>();
     String COUNTRY;
+    String CITY;
+    String CURRENCY_CODE;
     final String API_KEY = "f563de78aff8c5006420781b71b27998";
 
     public String getCOUNTRY() {
@@ -17,6 +24,22 @@ public class Service {
 
     public void setCOUNTRY(String COUNTRY) {
         this.COUNTRY = COUNTRY;
+    }
+
+    public String getCITY() {
+        return CITY;
+    }
+
+    public void setCITY(String CITY) {
+        this.CITY = CITY;
+    }
+
+    public String getCURRENCY_CODE() {
+        return CURRENCY_CODE;
+    }
+
+    public void setCURRENCY_CODE(String CURRENCY_CODE) {
+        this.CURRENCY_CODE = CURRENCY_CODE;
     }
 
     public Service(String country) {
@@ -68,10 +91,10 @@ public class Service {
     }
 
     public String getWeather(String city) {
-
+        setCITY(city);
         String output = "";
         try {
-            URL url = new URL("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + API_KEY);
+            URL url = new URL("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + API_KEY); //kod kraju
             try (java.io.BufferedReader in = new java.io.BufferedReader(new java.io.InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = in.readLine()) != null) {
@@ -85,11 +108,27 @@ public class Service {
     }
 
     public Double getRateFor(String currencyCode) {
-        return (convertCountryCurrencyToPLN() / CURRENCY_CODE_AND_VALUE.get(currencyCode));
+        setCURRENCY_CODE(currencyCode);
+
+        double getRateFor = 0;
+        try {
+            URL url = new URL("https://api.exchangerate.host/convert?from=" + currencyCode + "&to=PLN");
+            java.io.BufferedReader in = new java.io.BufferedReader(new java.io.InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
+            String line = in.readLine();
+            line = line.substring(line.indexOf("\"rate\":") + 7);
+            getRateFor = Double.parseDouble(line.substring(0, line.indexOf("},\"")));
+
+
+        } catch (java.io.IOException ignored) {
+            System.out.println("Something went wrong with api.exchangerate");
+        }
+        return getRateFor;
     }
 
     public Double getNBPRate() {
-        return (1d / convertCountryCurrencyToPLN());
+        if (!COUNTRY.equalsIgnoreCase("Poland"))
+            return (1d / convertCountryCurrencyToPLN());
+        else return 1.0;
     }
 
     private double convertCountryCurrencyToPLN() {
