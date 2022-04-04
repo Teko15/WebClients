@@ -1,10 +1,5 @@
 package zad02;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.annotations.JsonAdapter;
-
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -16,31 +11,8 @@ public class Service {
     String COUNTRY;
     String CITY;
     String CURRENCY_CODE;
+    String CURRENCY_CODE_COUNTRY;
     final String API_KEY = "f563de78aff8c5006420781b71b27998";
-
-    public String getCOUNTRY() {
-        return COUNTRY;
-    }
-
-    public void setCOUNTRY(String COUNTRY) {
-        this.COUNTRY = COUNTRY;
-    }
-
-    public String getCITY() {
-        return CITY;
-    }
-
-    public void setCITY(String CITY) {
-        this.CITY = CITY;
-    }
-
-    public String getCURRENCY_CODE() {
-        return CURRENCY_CODE;
-    }
-
-    public void setCURRENCY_CODE(String CURRENCY_CODE) {
-        this.CURRENCY_CODE = CURRENCY_CODE;
-    }
 
     public Service(String country) {
         setCOUNTRY(country);
@@ -94,7 +66,7 @@ public class Service {
         setCITY(city);
         String output = "";
         try {
-            URL url = new URL("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + API_KEY); //kod kraju
+            URL url = new URL("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + API_KEY);
             try (java.io.BufferedReader in = new java.io.BufferedReader(new java.io.InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = in.readLine()) != null) {
@@ -128,7 +100,10 @@ public class Service {
     public Double getNBPRate() {
         if (!COUNTRY.equalsIgnoreCase("Poland"))
             return (1d / convertCountryCurrencyToPLN());
-        else return 1.0;
+        else {
+            setCURRENCY_CODE_COUNTRY("PLN");
+            return 1.0;
+        }
     }
 
     private double convertCountryCurrencyToPLN() {
@@ -138,6 +113,42 @@ public class Service {
             countriesAndCodes.put(locale.getDisplayCountry(), code);
         }
         String getCountryCurrencyCode = Currency.getInstance(new Locale("", countriesAndCodes.get(getCOUNTRY()))).getCurrencyCode();
+        setCURRENCY_CODE_COUNTRY(getCountryCurrencyCode);
         return CURRENCY_CODE_AND_VALUE.get(getCountryCurrencyCode);
     }
+
+
+    public String getCOUNTRY() {
+        return COUNTRY;
+    }
+
+    public void setCOUNTRY(String COUNTRY) {
+        this.COUNTRY = COUNTRY;
+    }
+
+    public String getCURRENCY_CODE_COUNTRY() {
+        return CURRENCY_CODE_COUNTRY;
+    }
+
+    public void setCURRENCY_CODE_COUNTRY(String CURRENCY_CODE_COUNTRY) {
+        this.CURRENCY_CODE_COUNTRY = CURRENCY_CODE_COUNTRY;
+    }
+
+    public String getCITY() {
+        return CITY;
+    }
+
+    public void setCITY(String CITY) {
+        this.CITY = CITY;
+    }
+
+    public String getCURRENCY_CODE() {
+        return CURRENCY_CODE;
+    }
+
+    public void setCURRENCY_CODE(String CURRENCY_CODE) {
+        this.CURRENCY_CODE = CURRENCY_CODE;
+    }
+
+
 }
