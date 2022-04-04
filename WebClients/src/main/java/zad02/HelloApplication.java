@@ -42,7 +42,7 @@ public class HelloApplication extends Application {
         changeCurrency(DATA.getCURRENCY_CODE());
         refreshTextArea(true);
 
-        Text textCentrumDowodzenia = new Text("CENTRUM\nDOWODZENIA\nPJATK-TPO v2.4");
+        Text textCentrumDowodzenia = new Text("CENTRUM\nDOWODZENIA\nPJATK-TPO v2.6");
         textCentrumDowodzenia.setFont(Font.font("COMIC SANS", 24));
         textCentrumDowodzenia.setY(25);
         textCentrumDowodzenia.setX(20);
@@ -247,7 +247,6 @@ public class HelloApplication extends Application {
     }
 
     private static void changeJSON() {
-
         JsonParser jsonParser = new JsonParser();
         JsonObject jsonObject = (JsonObject) jsonParser.parse(WEATHER_JSON);
         JsonArray jsonArrayWeather = (JsonArray) jsonObject.get("weather");

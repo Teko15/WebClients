@@ -75,6 +75,7 @@ public class Service {
             }
         } catch (java.io.IOException ignored) {
             System.out.println("Something went wrong with api");
+            HelloApplication.WEATHER_CLOUDS = "wrong";
         }
         return output;
     }
