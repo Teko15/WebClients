@@ -254,16 +254,7 @@ public class HelloApplication extends Application {
         JsonObject jsonWeather = (JsonObject) jsonArrayWeather.get(0);
         JsonObject jsonMain = (JsonObject) jsonObject.get("main");
         double weatherTemperature = Double.parseDouble(String.valueOf(jsonMain.get("temp")));
-        String clouds = String.valueOf(jsonWeather.get("description"));
-        System.out.println(clouds);
-        /*System.out.println(jsonWeather.get("description"));
-        System.out.println(jsonMain.get("temp"));*/
-
-
-        String ourBegin = WEATHER_JSON.substring(WEATHER_JSON.indexOf("\"description\"") + 15);
-        String weatherClouds = ourBegin.substring(0, ourBegin.indexOf('\"'));
-        ourBegin = ourBegin.substring(ourBegin.indexOf("\"temp\":") + 7);
-        //double weatherTemperature = Double.parseDouble(ourBegin.substring(0, ourBegin.indexOf(',')));
+        String weatherClouds = String.valueOf(jsonWeather.get("description")).replaceAll("\"", "");
         weatherTemperature = (Math.round(10 * (weatherTemperature - 273d))) / 10d;
         WEATHER_CLOUDS = weatherClouds;
         WEATHER_TEMPERATURE = weatherTemperature;
