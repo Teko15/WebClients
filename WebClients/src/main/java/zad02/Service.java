@@ -66,6 +66,7 @@ public class Service {
         setCITY(city);
         String output = "";
         try {
+            //URL url = new URL("https://api.openweathermap.org/data/2.5/weather?q=" + city + "," + codecoutry + "&appid=" + API_KEY);
             URL url = new URL("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + API_KEY);
             try (java.io.BufferedReader in = new java.io.BufferedReader(new java.io.InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
                 String line;

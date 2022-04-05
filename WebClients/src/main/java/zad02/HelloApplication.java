@@ -232,7 +232,7 @@ public class HelloApplication extends Application {
     static Double WEATHER_TEMPERATURE;
 
     public static void main(String[] args) {
-        Service s = new Service("Poland");
+        Service s = new Service("Sri Lanka");
         String weatherJson = s.getWeather("Yakutsk");
         Double rate1 = s.getRateFor("USD");
         Double rate2 = s.getNBPRate();
